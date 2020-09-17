@@ -1,0 +1,7 @@
+docker build -t <your_username>/docker-nextjs .  
+docker run -d -p 3333:3000 <your_username>/docker-nextjs:latest
+
+https://docs.docker.com/compose/django/
+sudo docker-compose run web django-admin startproject <name> .
+
+psql -U postgres
