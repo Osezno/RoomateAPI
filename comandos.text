@@ -4,4 +4,11 @@ docker run -d -p 3333:3000 <your_username>/docker-nextjs:latest
 https://docs.docker.com/compose/django/
 sudo docker-compose run web django-admin startproject <name> .
 
+python manage.py startapp projectApp
+python manage.py makemigrations 
+
+python manage.py migrate 
+o ingresa a
+docker exec db bash
 psql -U postgres
+y crea las tablas

@@ -1,15 +1,44 @@
 
 
 
-CREATE SCHEMA roomy;
+--CREATE SCHEMA roomy;
 
 /*1*/
-CREATE TABLE roomy.roles (
-  id_rol         SERIAL PRIMARY KEY,
-  codigo         TEXT NOT NULL UNIQUE,
-  descripcion    TEXT NOT NULL
+DROP TABLE IF EXISTS roles;
+CREATE TABLE roles(
+  "createdAt"     TIMESTAMP NOT NULL,
+  "updatedAt"     TIMESTAMP NOT NULL,
+   id             SERIAL PRIMARY KEY,
+   codigo         TEXT NOT NULL UNIQUE,
+   descripcion    TEXT NOT NULL
 );
 
+DROP TABLE IF EXISTS estatus;
+CREATE TABLE estatus(
+  "createdAt"     TIMESTAMP NOT NULL,
+  "updatedAt"     TIMESTAMP NOT NULL,
+   id             SERIAL PRIMARY KEY,
+   codigo         TEXT NOT NULL UNIQUE,
+   descripcion    TEXT NOT NULL
+);
+
+ uuid                      TEXT NOT NULL UNIQUE,
+DROP TABLE IF EXISTS usuarios;
+CREATE TABLE usuarios (
+    "createdAt"               TIMESTAMP NOT NULL,
+    "updatedAt"               TIMESTAMP NOT NULL,
+    id                        SERIAL PRIMARY KEY,
+   
+    id_rol                    INTEGER REFERENCES roles(id) NOT NULL,
+    id_estatus                INTEGER REFERENCES estatus(id) NOT NULL,
+    nombre                    TEXT NOT NULL,
+    email                     TEXT NOT NULL,
+    password                  TEXT NOT NULL,
+    fotografia                TEXT NOT NULL,
+    telefono                  TEXT NOT NULL,
+    onboard                   BOOLEAN NOT NULL,
+);
+-- es necesario dar un uuid a estas cosas?
 CREATE TABLE roomy.usuarios (
 
 id                        SERIAL PRIMARY KEY,
@@ -28,13 +57,7 @@ fecha_actualizacion       TIMESTAMP NOT NULL
 );
 
 
-CREATE TABLE roomy.status (
-  
- id_status      SERIAL PRIMARY KEY,
- codigo         TEXT NOT NULL UNIQUE,
- descripcion    TEXT NOT NULL
 
-);
 /*pendiente termindao due, perdido, apartado, encontrado,proximo, en curso, terminada*/
 
 CREATE TABLE roomy.tipo (

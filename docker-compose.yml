@@ -4,15 +4,15 @@
     db:
       image: postgres
       environment:
-        - POSTGRES_DB=postgres
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=postgres
+        - POSTGRES_DB=roomies
+        - POSTGRES_USER=oseishon
+        - POSTGRES_PASSWORD=zxcv1234
     web:
       build: .
-      command: python manage.py runserver 0.0.0.0:8000
+      command: python manage.py runserver 0.0.0.0:9000
       volumes:
         - .:/code
       ports:
-        - "8000:8000"
+        - "9000:9000"
       depends_on:
         - db

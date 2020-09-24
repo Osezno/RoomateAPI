@@ -16,8 +16,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from post import views as post_views
+from usr import userviews as user_views
+from usr import sessionviews as session_views
+
 
 urlpatterns = [
+
     path('admin/', admin.site.urls),
-    path('create_post/', post_views.create_post),  
+    path('create_post/', post_views.create_post),
+    # ABC DE USUARIOS
+    path('api/v1/nuevo_usuario/', user_views.nuevo_usuario),
+    path('api/v1/eliminar_usuario/', user_views.eliminar_usuario),
+    path('api/v1/editar_usuario/', user_views.editar_usuario),
+    path('api/v1/ver_usuario/', user_views.ver_usuario),
+    path('api/v1/ver_usuarios/', user_views.ver_usuarios),
+    # MANEJO DE SESIONES
+    # path('api/v1/login/', session_views.login),
+    # path('api/v1/logout/', session_views.logout),
+    # path('api/v1/forgot_password/', session_views.forgot_password),
+
 ]
