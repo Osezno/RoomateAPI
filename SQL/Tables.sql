@@ -28,7 +28,7 @@ CREATE TABLE usuarios (
     "createdAt"               TIMESTAMP NOT NULL,
     "updatedAt"               TIMESTAMP NOT NULL,
     id                        SERIAL PRIMARY KEY,
-   
+    ses_id                    TEXT,
     id_rol                    INTEGER REFERENCES roles(id) NOT NULL,
     id_estatus                INTEGER REFERENCES estatus(id) NOT NULL,
     nombre                    TEXT NOT NULL,

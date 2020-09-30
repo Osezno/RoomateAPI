@@ -4,17 +4,11 @@ from django.utils import timezone
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from utils2.validations import checkNull, checkLength, checkPassword, checkEmail
+from utils2.policies import check_session
+from utils2.catalogs import Message, success, rol, resMessage
 import bcrypt
 
 
-class Message:
-    def __init__(self, success="False", message="Faltan datos", data=None):
-        self.success = success
-        self.message = message
-        self.data = data
-
-    def show(self):
-        return dict(vars(self), success=self.success, message=self.message, data=self.data)
 
 
 def validate(d, edit):
@@ -42,9 +36,12 @@ def validate(d, edit):
     return m
 
 
-@csrf_exempt
 def nuevo_usuario(request):
     if request.method == 'POST':
+        auth = check_session(request.headers, rol['admin'])
+        if(auth.success != True):
+            return JsonResponse(auth.show())
+
         d = request.POST
 
         valid = validate(d, False)
@@ -62,13 +59,13 @@ def nuevo_usuario(request):
             return JsonResponse(m.show())
         else:
             dummy = 'https://www.worldfuturecouncil.org/wp-content/uploads/2020/02/dummy-profile-pic-300x300-1.png'
-            passwd = d['password'].encode()
+            passwd = d['password'].encode('utf-8')
             salt = bcrypt.gensalt()
             hashed = bcrypt.hashpw(passwd, salt)
             foto = d['fotografia'] if hasattr(d, 'fotografia') else dummy
             # let hash = bcrypt.password passw something with bcrypt for password
             u = Usuario(nombre=d['nombre'],
-                        password=hashed,
+                        password=hashed.decode('utf8'),
                         email=d['email'],
                         telefono=d['telefono'],
                         fotografia=foto,
@@ -92,32 +89,39 @@ def nuevo_usuario(request):
             return JsonResponse(m.show())
 
 
-@csrf_exempt
 def eliminar_usuario(request):
     if request.method == 'POST':
-       id =  request.POST.get('uuid')
-       print(id)
-       if(id):
-           userExists = Usuario.objects.filter(id = id).first()
-           if(userExists):
-               userExists.delete()
-               m = Message(
-                success=True,
-                data= {"nombre":userExists.nombre,'id':userExists.id, 'email':userExists.email},
-                message="Usuario eliminado exitosamente")
-               return JsonResponse(m.show())
-           else:
-               m = Message(message="Usuario no existe en la base de datos")
-               return JsonResponse(m.show())
-       else:
+        auth = check_session(request.headers, rol['admin'])
+        if(auth.success != True):
+            return JsonResponse(auth.show())
+
+        id = request.POST.get('uuid')
+
+        if(id):
+            userExists = Usuario.objects.filter(id=id).first()
+            if(userExists):
+                userExists.delete()
+                m = Message(
+                    success=True,
+                    data={"nombre": userExists.nombre,
+                          'id': userExists.id, 'email': userExists.email},
+                    message="Usuario eliminado exitosamente")
+                return JsonResponse(m.show())
+            else:
+                m = Message(message="Usuario no existe en la base de datos")
+                return JsonResponse(m.show())
+        else:
             m = Message()
             return JsonResponse(m.show())
-               
 
 
-@csrf_exempt
 def editar_usuario(request):
+
     if request.method == 'POST':
+        auth = check_session(request.headers, rol['associate'])
+        if(auth.success != True):
+            return JsonResponse(auth.show())
+        
         d = request.POST
         valid = validate(d, True)
 
@@ -125,10 +129,10 @@ def editar_usuario(request):
             return JsonResponse(valid.show())
 
         userExists = Usuario.objects.filter(id=d['uuid']).first()
-        print(userExists)
+    
         # check if user exists
         if(not userExists):
-            print("El Usuario no existe")
+            
             m = Message(
                 message="El Usuario no existe")
 
@@ -158,18 +162,22 @@ def editar_usuario(request):
 
             return JsonResponse(m.show())
 
-
-@csrf_exempt
 def ver_usuario(request):
     if request.method == 'GET':
+        auth = check_session(request.headers, rol['associate'])
+        print("auth",auth)
+        if(auth.success != True):
+            return JsonResponse(auth.show())
+        
         id = request.GET.get('uuid')
-        print( id)
-        if(id == False): 
+        print("test",id)
+        if(id == False):
             m = Message()
             return JsonResponse(m.show())
-            
-        userExists = Usuario.objects.filter(id = id).values()
-        print(userExists)
+
+        userExists = Usuario.objects.filter(id=id).values('id_rol','id_estatus','nombre','email','fotografia','telefono')
+        
+        
         if(userExists):
             m = Message(
                 success=True,
@@ -180,11 +188,14 @@ def ver_usuario(request):
             m = Message(message="Usuario no encontrado")
             return JsonResponse(m.show())
 
-
-@csrf_exempt
 def ver_usuarios(request):
     if request.method == 'GET':
-        usersExists = Usuario.objects.values().order_by('id')
+        auth = check_session(request.headers, rol['manager'])
+        if(auth.success != True):
+            return JsonResponse(auth.show())
+                
+        usersExists = Usuario.objects.values('id_rol','id_estatus','nombre','email','fotografia','telefono').order_by('id')
+        #limitar lo que se envia de los usuarios
         if usersExists:
             m = Message(
                 success=True,
@@ -195,4 +206,3 @@ def ver_usuarios(request):
             m = Message(
                 message="No encontramos usuarios en la base de datos")
             return JsonResponse(m.show())
-            

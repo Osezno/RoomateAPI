@@ -28,6 +28,7 @@ class Usuario(models.Model):
     password = models.CharField(max_length=255)
     fotografia = models.CharField(max_length=255)
     telefono = models.CharField(max_length=255)
+    ses_id = models.CharField(max_length=255)
     onboard   = models.BooleanField(choices=((False, False),(True, True)))
     createdAt = models.DateField(auto_now_add=True)
     updatedAt = models.DateField(auto_now=True, editable=False)

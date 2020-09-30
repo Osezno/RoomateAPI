@@ -31,8 +31,8 @@ urlpatterns = [
     path('api/v1/ver_usuario/', user_views.ver_usuario),
     path('api/v1/ver_usuarios/', user_views.ver_usuarios),
     # MANEJO DE SESIONES
-    # path('api/v1/login/', session_views.login),
-    # path('api/v1/logout/', session_views.logout),
+    path('api/v1/login/', session_views.login),
+    path('api/v1/logout/', session_views.logout),
     # path('api/v1/forgot_password/', session_views.forgot_password),
 
 ]
