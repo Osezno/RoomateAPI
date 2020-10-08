@@ -22,7 +22,7 @@ CREATE TABLE estatus(
    descripcion    TEXT NOT NULL
 );
 
- uuid                      TEXT NOT NULL UNIQUE,
+ 
 DROP TABLE IF EXISTS usuarios;
 CREATE TABLE usuarios (
     "createdAt"               TIMESTAMP NOT NULL,
@@ -37,6 +37,8 @@ CREATE TABLE usuarios (
     fotografia                TEXT NOT NULL,
     telefono                  TEXT NOT NULL,
     onboard                   BOOLEAN NOT NULL,
+    uuid                      TEXT NOT NULL UNIQUE,
+    tmp_password              TEXT,
 );
 -- es necesario dar un uuid a estas cosas?
 CREATE TABLE roomy.usuarios (

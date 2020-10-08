@@ -63,7 +63,7 @@ ROOT_URLCONF = 'main.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -107,6 +107,18 @@ DATABASES = {
        'PORT': '5434',
     }
 }
+
+
+#EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
+DEFAULT_FROM_EMAIL = '<support@ltest.com>'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_HOST_USER = str(os.getenv('MAIL_GUN_USER'))
+EMAIL_HOST_PASSWORD = str(os.getenv('MAIL_GUN_PWD'))
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+#MAILGUN_ACCESS_KEY = str(os.getenv('MAIL_GUN_KEY'))
+#MAILGUN_SERVER_NAME = str(os.getenv('MAIL_GUN_SERVER'))
 
 # DATABASES = {
 #     'default': {

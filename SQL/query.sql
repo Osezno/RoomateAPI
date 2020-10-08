@@ -12,4 +12,31 @@ update usuarios SET onboard = False  WHERE id = 1;
 ALTER TABLE usuarios ADD onboard  BOOLEAN NOT NULL;
 ALTER TABLE usuarios ADD ses_id  TEXT;
 
+INSERT INTO usuarios (
+    uuid,
+id_rol,
+id_estatus,
+nombre,
+email,
+password,
+tmp_password,
+fotografia,
+telefono,
+onboard,
+ses_id ,
+"createdAt",
+"updatedAt")VALUES (
+    md5('admin'),
+    1,
+    1,
+    'soporte',
+    'test@test.com',
+    '1ab2c3d4e5',
+    '','',
+    '123421434',
+     false,
+     '',
+     now(),
+     now() );
+
 INSERT INTO public.post_post( title, content , "created", "modified") VALUES ('First post', 'Loremp ipsum dolor amet' , now(), now() ) RETURNING *;

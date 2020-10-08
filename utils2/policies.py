@@ -27,7 +27,13 @@ def login_p(data):
         
         m = Message(message= errors['noUser'])
         return m
-
+    
+    # if(data['email'] == "test@test.com"):
+    #       print('entro')
+    #       m = Message(success=True)
+    #       return m
+      
+      
     match = bcrypt.checkpw(data['password'].encode(), userExists.password.encode())
     print("match",match)
 
@@ -41,7 +47,7 @@ def login_p(data):
 
 def check_session(data, rol):
     f = {'token', 'uuid'}
-    print(data['token'], data['uuid'])
+   
     full_request = data.keys() >= f
     
     if (full_request != True):
@@ -51,7 +57,7 @@ def check_session(data, rol):
     session = jwt.decode(data['token'], settings.SECRET_KEY, algorithm='HS256')
     #verify user
     user = checkUserById(data['uuid'])
-    print(session,user)
+   
     #validate
     if(user and user.id_estatus == estatus['activo'] and user.ses_id == session['user_id'] and user.id_rol in rol): 
         m = Message(success= True)
